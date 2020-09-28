@@ -3,7 +3,7 @@
     /// <summary>
     /// An item contained in Api storage
     /// </summary>
-    public class StorageItem
+    public class StoredApiItem
     {
         public string Name { get; set; }
 

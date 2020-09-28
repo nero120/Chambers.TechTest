@@ -11,22 +11,22 @@ using System.Threading.Tasks;
 namespace Chambers.TechTest.BlobStorage
 {
     /// <summary>
-    /// Api storage client for working with Azure blob storage
+    /// Api repository for working with Azure blob storage
     /// </summary>
-    public class BlobStorageClient : IApiStorageClient
+    public class BlobStorageApiRepository : IApiRepository
     {
         private BlobServiceClient _service;
 
         /// <summary>
-        /// Initialises a new BlobStorageClient
+        /// Initialises a new BlobStorageApiRepository
         /// </summary>
         /// <param name="connectionString">The connection string to use when connecting to azure blob storage</param>
-        /// <returns>A new BlobStorageClient object</returns>
-        public static BlobStorageClient Init(string connectionString)
+        /// <returns>A new BlobStorageApiRepository object</returns>
+        public static BlobStorageApiRepository Init(string connectionString)
         {
-            var client = new BlobStorageClient();
-            client.Connect(connectionString);
-            return client;
+            var repository = new BlobStorageApiRepository();
+            repository.Connect(connectionString);
+            return repository;
         }
 
         /// <summary>
@@ -43,13 +43,13 @@ namespace Chambers.TechTest.BlobStorage
         /// </summary>
         /// <param name="containerName">The name of the blob container to inspect</param>
         /// <returns>A list of storage items</returns>
-        public async Task<IEnumerable<StorageItem>> GetAllItems(string containerName)
+        public async Task<IEnumerable<StoredApiItem>> GetAllItems(string containerName)
         {
             var container = await GetContainer(containerName);
-            var results = new List<StorageItem>();
+            var results = new List<StoredApiItem>();
             await foreach (var blob in container.GetBlobsAsync())
             {
-                results.Add(new StorageItem
+                results.Add(new StoredApiItem
                 {
                     Name = blob.Metadata[Constants.FileNameMetadataItemName],
                     Location = blob.Name,
@@ -65,7 +65,7 @@ namespace Chambers.TechTest.BlobStorage
         /// <param name="id">The id of the item to retrieve</param>
         /// <param name="containerName">The name of the blob container where the item is located</param>
         /// <returns>A storage item representing the requested item</returns>
-        public async Task<StorageItem> GetItem(Guid id, string containerName)
+        public async Task<StoredApiItem> GetItem(Guid id, string containerName)
         {
             var container = _service.GetBlobContainerClient(containerName);
             var blobClient = container.GetBlobClient(id.ToString());            
@@ -75,7 +75,7 @@ namespace Chambers.TechTest.BlobStorage
             }
 
             var props = (await blobClient.GetPropertiesAsync()).Value;
-            return new StorageItem
+            return new StoredApiItem
             {
                 Name = props.Metadata[Constants.FileNameMetadataItemName],
                 Location = blobClient.Name,
@@ -113,7 +113,7 @@ namespace Chambers.TechTest.BlobStorage
         /// </summary>
         /// <param name="file">File object that will be added</param>
         /// <returns>A storage item representing the added item</returns>
-        public async Task<StorageItem> AddItem(IFormFile file, string containerName)
+        public async Task<StoredApiItem> AddItem(IFormFile file, string containerName)
         {
             var container = await GetContainer(containerName);
             var blobClient = container.GetBlobClient(Guid.NewGuid().ToString());
@@ -136,7 +136,7 @@ namespace Chambers.TechTest.BlobStorage
             }
 
             // Return uploaded file info as storage item
-            return new StorageItem
+            return new StoredApiItem
             {
                 Name = file.FileName,
                 Location = blobClient.Name,

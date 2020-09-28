@@ -16,7 +16,7 @@ namespace Chambers.TechTest.Tests.Integration
         public async static Task ClassInitialize(TestContext context)
         {
             // Remove the existing pdfs container before running tests
-            var storage = BlobStorageClient.Init(Constants.BlobStorageConnectionString);
+            var storage = BlobStorageApiRepository.Init(Constants.BlobStorageConnectionString);
             await storage.DeleteContainer(BlobStorage.Constants.PdfsContainerName);
         }
 

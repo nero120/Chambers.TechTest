@@ -22,30 +22,30 @@ namespace Chambers.TechTest.Tests.Unit
         public async Task GetPdfs_NoResults_ReturnsArrayOfStorageItems()
         {
             var mockLogger = new Mock<ILogger<PdfsController>>();
-            var mockStorageClient = new Mock<IApiStorageClient>();
+            var mockStorageClient = new Mock<IApiRepository>();
             mockStorageClient
                 .Setup(c => c.GetAllItems(It.IsAny<string>()));
             var controller = new PdfsController(mockLogger.Object, mockStorageClient.Object);
 
-            var result = (await controller.GetPdfs()) as ObjectResult;
+            var result = await controller.GetPdfs();
 
-            result.Value.Should().BeOfType<StorageItem[]>();
+            (result.Result as ObjectResult).Value.Should().BeOfType<StoredApiItem[]>();
         }
 
         [TestMethod]
         public async Task GetPdfs_OneResult_ReturnsArrayOfStorageItems()
         {
-            var testResults = new List<StorageItem> {
-                new StorageItem() { FileSize = 0, Location = "location", Name = "name" }
+            var testResults = new List<StoredApiItem> {
+                new StoredApiItem() { FileSize = 0, Location = "location", Name = "name" }
             };
             var mockLogger = new Mock<ILogger<PdfsController>>();
-            var mockStorageClient = new Mock<IApiStorageClient>();
+            var mockStorageClient = new Mock<IApiRepository>();
             mockStorageClient.Setup(c => c.GetAllItems(It.IsAny<string>())).Returns(Task.FromResult(testResults.AsEnumerable()));
             var controller = new PdfsController(mockLogger.Object, mockStorageClient.Object);
 
-            var result = (await controller.GetPdfs()) as ObjectResult;
+            var result = await controller.GetPdfs();
 
-            result.Value.Should().Be(testResults);
+            (result.Result as ObjectResult).Value.Should().BeEquivalentTo(testResults);
         }
     }
 }

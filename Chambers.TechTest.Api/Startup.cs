@@ -1,7 +1,9 @@
+using Chambers.TechTest.Api.Models;
 using Chambers.TechTest.BlobStorage;
 using Chambers.TechTest.Common.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 
 namespace Chambers.TechTest.Api
 {
@@ -25,8 +28,8 @@ namespace Chambers.TechTest.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add api storage service
-            services.Add(new ServiceDescriptor(typeof(IApiStorageClient),
-                BlobStorageClient.Init(Configuration[Constants.BlobStorageConnectionStringName])));
+            services.Add(new ServiceDescriptor(typeof(IApiRepository),
+                BlobStorageApiRepository.Init(Configuration[Common.Constants.BlobStorageConnectionStringName])));
 
             // Return appropriate error if incorrect content type requested
             services.AddControllers(configure =>

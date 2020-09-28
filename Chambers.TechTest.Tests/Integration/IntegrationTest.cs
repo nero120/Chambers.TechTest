@@ -24,13 +24,13 @@ namespace Chambers.TechTest.Tests.Integration
                     builder.ConfigureServices(services =>
                     {
                         // Replace storage client service with one we can run tests against
-                        var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IApiStorageClient));
+                        var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IApiRepository));
                         if (descriptor != null)
                         {
                             services.Remove(descriptor);
                         }
-                        services.Add(new ServiceDescriptor(typeof(IApiStorageClient),
-                            BlobStorageClient.Init(Constants.BlobStorageConnectionString)));
+                        services.Add(new ServiceDescriptor(typeof(IApiRepository),
+                            BlobStorageApiRepository.Init(Constants.BlobStorageConnectionString)));
                     });
                 });
 
