@@ -97,7 +97,7 @@ namespace Chambers.TechTest.Api.Controllers
         }
 
         /// <summary>
-        /// Add a pdf
+        /// Add a pdf (max file size 5MB)
         /// </summary>
         /// <param name="file">Pdf file to upload</param>
         /// <returns>The uploaded pdf item metadata</returns>

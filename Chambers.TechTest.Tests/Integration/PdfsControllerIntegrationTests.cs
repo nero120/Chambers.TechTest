@@ -10,7 +10,7 @@ namespace Chambers.TechTest.Tests.Integration
     /// Integration tests for api pdfs resource
     /// </summary>
     [TestClass]
-    public class PdfsControllerTests : IntegrationTest
+    public class PdfsControllerIntegrationTests : IntegrationTest
     {
         [ClassInitialize]
         public async static Task ClassInitialize(TestContext context)
@@ -19,13 +19,25 @@ namespace Chambers.TechTest.Tests.Integration
             var storage = BlobStorageClient.Init(Constants.BlobStorageConnectionString);
             await storage.DeleteContainer(BlobStorage.Constants.PdfsContainerName);
         }
-        
+
         [TestMethod]
-        public async Task GetPdfsReturns200()
+        public async Task GetPdfs_ReturnsStatusCode200()
         {
-            var response = await TestClient.GetAsync("api/pdfs");
-            var body = await response.Content.ReadAsStringAsync();
+            const string API_URL = "api/pdfs";
+
+            var response = await TestClient.GetAsync(API_URL);
+            
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [TestMethod]
+        public async Task GetPdfs_ReturnsEmptyArray()
+        {
+            const string API_URL = "api/pdfs";
+
+            var response = await TestClient.GetAsync(API_URL);
+            var body = await response.Content.ReadAsStringAsync();
+
             body.Should().Be("[]");
         }
     }
