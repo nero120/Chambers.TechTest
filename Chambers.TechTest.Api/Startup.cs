@@ -29,7 +29,7 @@ namespace Chambers.TechTest.Api
         {
             // Add api storage service
             services.Add(new ServiceDescriptor(typeof(IApiRepository),
-                BlobStorageApiRepository.Init(Configuration[Common.Constants.BlobStorageConnectionStringName])));
+                BlobStorageApiRepository.Init(Configuration[Constants.BlobStorageConnectionStringName])));
 
             // Return appropriate error if incorrect content type requested
             services.AddControllers(configure =>

@@ -1,5 +1,4 @@
 ﻿using Chambers.TechTest.Api.Models;
-using Chambers.TechTest.BlobStorage;
 using Chambers.TechTest.Common.Interfaces;
 using Chambers.TechTest.Common.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +32,7 @@ namespace Chambers.TechTest.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StoredItem>>> GetPdfs()
         {
-            var blobs = await _storage.GetAllItems(Constants.PdfsContainerName);
+            var blobs = await _storage.GetAllItems(BlobStorage.Constants.PdfsContainerName);
             return Ok(blobs);
         }
 
@@ -53,7 +52,7 @@ namespace Chambers.TechTest.Api.Controllers
             }
 
             // Retrieve the item from storage
-            var blob = await _storage.GetItem(guid, Constants.PdfsContainerName);
+            var blob = await _storage.GetItem(guid, BlobStorage.Constants.PdfsContainerName);
             if (blob == null)
             {
                 return NotFound();
@@ -78,14 +77,14 @@ namespace Chambers.TechTest.Api.Controllers
             }
 
             // Retrieve the item from storage
-            var blob = await _storage.GetItem(guid, Constants.PdfsContainerName);
+            var blob = await _storage.GetItem(guid, BlobStorage.Constants.PdfsContainerName);
             if (blob == null)
             {
                 return NotFound();
             }
 
             // Return the binary data to the client
-            var bytes = await _storage.GetItemBinaryData(guid, Constants.PdfsContainerName);
+            var bytes = await _storage.GetItemBinaryData(guid, BlobStorage.Constants.PdfsContainerName);
             var result = new FileContentResult(bytes, "application/octet-stream");
             result.FileDownloadName = blob.Name;
             return result;
@@ -100,8 +99,8 @@ namespace Chambers.TechTest.Api.Controllers
         public async Task<ActionResult<StoredItem>> UploadPdf([FromForm]UploadPdfModel uploadData)
         {
             // Create a new unique file name and add the item to storage
-            _logger.LogInformation($"Uploading {uploadData.File.FileName} to container {Constants.PdfsContainerName}");
-            var item = await _storage.AddItem(uploadData.File, Constants.PdfsContainerName);
+            _logger.LogInformation($"Uploading {uploadData.File.FileName} to container {BlobStorage.Constants.PdfsContainerName}");
+            var item = await _storage.AddItem(uploadData.File, BlobStorage.Constants.PdfsContainerName);
             return CreatedAtRoute("GetPdf", new { id = item.Location }, item);
         }
     }

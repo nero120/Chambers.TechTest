@@ -1,4 +1,4 @@
-﻿namespace Chambers.TechTest.Api.Common
+﻿namespace Chambers.TechTest.Api
 {
     public static class Constants
     {
