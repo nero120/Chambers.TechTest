@@ -13,12 +13,12 @@ namespace Chambers.TechTest.Common.Interfaces
     {
         static IApiRepository Init(string connectionString) => throw new NotImplementedException();
 
-        Task<IEnumerable<StoredApiItem>> GetAllItems(string containerName);
+        Task<IEnumerable<StoredItem>> GetAllItems(string containerName);
 
-        Task<StoredApiItem> GetItem(Guid id, string containerName);
+        Task<StoredItem> GetItem(Guid id, string containerName);
 
         Task<byte[]> GetItemBinaryData(Guid id, string containerName);
 
-        Task<StoredApiItem> AddItem(IFormFile file, string containerName);
+        Task<StoredItem> AddItem(IFormFile file, string containerName);
     }
 }

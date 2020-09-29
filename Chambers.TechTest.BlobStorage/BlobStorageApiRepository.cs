@@ -43,13 +43,13 @@ namespace Chambers.TechTest.BlobStorage
         /// </summary>
         /// <param name="containerName">The name of the blob container to inspect</param>
         /// <returns>A list of storage items</returns>
-        public async Task<IEnumerable<StoredApiItem>> GetAllItems(string containerName)
+        public async Task<IEnumerable<StoredItem>> GetAllItems(string containerName)
         {
             var container = await GetContainer(containerName);
-            var results = new List<StoredApiItem>();
+            var results = new List<StoredItem>();
             await foreach (var blob in container.GetBlobsAsync())
             {
-                results.Add(new StoredApiItem
+                results.Add(new StoredItem
                 {
                     Name = blob.Metadata[Constants.FileNameMetadataItemName],
                     Location = blob.Name,
@@ -65,7 +65,7 @@ namespace Chambers.TechTest.BlobStorage
         /// <param name="id">The id of the item to retrieve</param>
         /// <param name="containerName">The name of the blob container where the item is located</param>
         /// <returns>A storage item representing the requested item</returns>
-        public async Task<StoredApiItem> GetItem(Guid id, string containerName)
+        public async Task<StoredItem> GetItem(Guid id, string containerName)
         {
             var container = _service.GetBlobContainerClient(containerName);
             var blobClient = container.GetBlobClient(id.ToString());            
@@ -75,7 +75,7 @@ namespace Chambers.TechTest.BlobStorage
             }
 
             var props = (await blobClient.GetPropertiesAsync()).Value;
-            return new StoredApiItem
+            return new StoredItem
             {
                 Name = props.Metadata[Constants.FileNameMetadataItemName],
                 Location = blobClient.Name,
@@ -113,7 +113,7 @@ namespace Chambers.TechTest.BlobStorage
         /// </summary>
         /// <param name="file">File object that will be added</param>
         /// <returns>A storage item representing the added item</returns>
-        public async Task<StoredApiItem> AddItem(IFormFile file, string containerName)
+        public async Task<StoredItem> AddItem(IFormFile file, string containerName)
         {
             var container = await GetContainer(containerName);
             var blobClient = container.GetBlobClient(Guid.NewGuid().ToString());
@@ -136,7 +136,7 @@ namespace Chambers.TechTest.BlobStorage
             }
 
             // Return uploaded file info as storage item
-            return new StoredApiItem
+            return new StoredItem
             {
                 Name = file.FileName,
                 Location = blobClient.Name,

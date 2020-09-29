@@ -29,14 +29,14 @@ namespace Chambers.TechTest.Tests.Unit
 
             var result = await controller.GetPdfs();
 
-            (result.Result as ObjectResult).Value.Should().BeOfType<StoredApiItem[]>();
+            (result.Result as ObjectResult).Value.Should().BeOfType<StoredItem[]>();
         }
 
         [TestMethod]
         public async Task GetPdfs_OneResult_ReturnsArrayOfStorageItems()
         {
-            var testResults = new List<StoredApiItem> {
-                new StoredApiItem() { FileSize = 0, Location = "location", Name = "name" }
+            var testResults = new List<StoredItem> {
+                new StoredItem() { FileSize = 0, Location = "location", Name = "name" }
             };
             var mockLogger = new Mock<ILogger<PdfsController>>();
             var mockStorageClient = new Mock<IApiRepository>();

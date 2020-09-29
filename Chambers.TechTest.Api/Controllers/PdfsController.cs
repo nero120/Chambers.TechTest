@@ -31,7 +31,7 @@ namespace Chambers.TechTest.Api.Controllers
         /// </summary>
         /// <returns>A list of pdf item metadata</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StoredApiItem>>> GetPdfs()
+        public async Task<ActionResult<IEnumerable<StoredItem>>> GetPdfs()
         {
             var blobs = await _storage.GetAllItems(Constants.PdfsContainerName);
             return Ok(blobs);
@@ -43,7 +43,7 @@ namespace Chambers.TechTest.Api.Controllers
         /// <param name="id">The location guid of the pdf to retrieve</param>
         /// <returns>The requested pdf item metadata</returns>
         [HttpGet("{id}", Name = "GetPdf")]
-        public async Task<ActionResult<StoredApiItem>> GetPdf(string id)
+        public async Task<ActionResult<StoredItem>> GetPdf(string id)
         {
             // If the id is not valid return 404
             Guid guid;
@@ -68,7 +68,7 @@ namespace Chambers.TechTest.Api.Controllers
         /// <param name="id">The location guid of the pdf to retrieve</param>
         /// <returns>The pdf binary data as an octet stream</returns>
         [HttpGet("{id}/download")]
-        public async Task<ActionResult<FileContentResult>> DownloadPdf(string id)
+        public async Task<ActionResult> DownloadPdf(string id)
         {
             // If the id is not valid return 404
             Guid guid;
@@ -97,7 +97,7 @@ namespace Chambers.TechTest.Api.Controllers
         /// <param name="uploadData">Pdf file to upload</param>
         /// <returns>The uploaded pdf item metadata</returns>
         [HttpPost]
-        public async Task<ActionResult<StoredApiItem>> UploadPdf([FromForm]UploadPdfModel uploadData)
+        public async Task<ActionResult<StoredItem>> UploadPdf([FromForm]UploadPdfModel uploadData)
         {
             // Create a new unique file name and add the item to storage
             _logger.LogInformation($"Uploading {uploadData.File.FileName} to container {Constants.PdfsContainerName}");
